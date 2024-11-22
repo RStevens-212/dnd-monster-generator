@@ -1,95 +1,76 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client'
+import MonsterForm from './components/MonsterForm';
+import { MonsterCard } from './components/MonsterCard';
+import { PDFGenerator } from './components/PDFGenerator';
+import { useState } from 'react';
 
 export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [monster, setMonster] = useState(null);
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+  const handleSubmit = async (formData: {
+    types?: string[];
+    size?: string;
+    minCR: number;
+    maxCR: number;
+    hasLairActions?: boolean;
+    selectedResistances?: string[];
+    vulnerabilities?: string[];
+  }) => {
+    console.log('Form Data:', formData);
+  
+    // Ensure defaults are applied
+    const minCR = formData.minCR || 0.25;
+    const maxCR = formData.maxCR || 30;
+    const selectedTypes = formData.types || ['Any'];
+    const selectedSize = formData.size || 'Any';
+    const hasLairActions = formData.hasLairActions || false;
+    const selectedResistances = formData.selectedResistances || [];
+    const vulnerabilities = formData.vulnerabilities || [];
+  
+    // Send data to the backend
+    const response = await fetch('/api/generateMonster', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        types: selectedTypes,
+        size: selectedSize,
+        minCR,
+        maxCR,
+        hasLairActions,
+        resistances: selectedResistances, 
+        vulnerabilities: vulnerabilities,
+      }),
+    });
+    
+  
+    // Handle response
+    if (response.ok) {
+      const generatedMonster = await response.json();
+      console.log('Generated Monster:', generatedMonster);
+      setMonster(generatedMonster); // Update state with the generated monster
+    } else {
+      console.error('Error generating monster:', response.statusText);
+    }
+  };
+    
+
+  return (
+    <main style={{ padding: '20px', maxWidth: '800px', margin: 'auto' }}>
+      <h1 style={{ textAlign: 'center' }}>D&D 5E Monster Generator</h1>
+      <p style={{ textAlign: 'center' }}>
+        Create custom monsters tailored to your campaign. Define the type, challenge rating, size, and other parameters.
+      </p>
+
+      {/* Pass the handleFormSubmit as onSubmit to the MonsterForm component */}
+      <MonsterForm onSubmit={handleSubmit} />
+
+      {/* If a monster is generated, show it in a MonsterCard and allow PDF generation */}
+      {monster && (
+        <>
+          <MonsterCard monster={monster} />
+          <PDFGenerator monster={monster} />
+        </>
+      )}
+    </main>
   );
 }
