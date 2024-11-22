@@ -24,8 +24,8 @@ export default function Home() {
     const selectedTypes = formData.types || ['Any'];
     const selectedSize = formData.size || 'Any';
     const hasLairActions = formData.hasLairActions || false;
-    const selectedResistances = formData.selectedResistances || [];
-    const vulnerabilities = formData.vulnerabilities || [];
+    const selectedResistances = formData.selectedResistances || undefined;
+    const vulnerabilities = formData.vulnerabilities || undefined;
   
     // Send data to the backend
     const response = await fetch('/api/generateMonster', {
@@ -41,7 +41,7 @@ export default function Home() {
         vulnerabilities: vulnerabilities,
       }),
     });
-    
+    console.log(response);
   
     // Handle response
     if (response.ok) {

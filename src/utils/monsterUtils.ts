@@ -34,20 +34,38 @@ function calculateBaseStats(cr: number): {
 }
 
 function generateLairActions(type: string): string[] {
-  const lairActionsMap = {
+  const lairActionsMap: Record<string, string[]> = {
     Dragon: [
       "The lair trembles, causing unstable structures to collapse.",
       "Volcanic vents spew lava, dealing fire damage.",
+      "A sudden burst of wind knocks creatures prone.",
     ],
     Undead: [
-      "The lair fills with ghostly whispers, imposing disadvantage on Wisdom saves.",
+      "The lair fills with ghostly whispers, imposing disadvantage on Wisdom saving throws.",
       "Shadows shift and attack, dealing necrotic damage.",
+      "Bones animate and attempt to grapple intruders.",
     ],
+    Fey: [
+      "Illusory flowers bloom, creating difficult terrain.",
+      "Fey magic confuses enemies, forcing them to attack allies.",
+    ],
+    Fiend: [
+      "Pools of infernal fire erupt, dealing fire damage.",
+      "Demonic laughter echoes, causing fear in non-fiends.",
+    ],
+    Construct: [
+      "The lair's mechanical defenses activate, firing bolts or darts.",
+      "Gears grind loudly, imposing disadvantage on Perception checks.",
+    ],
+    // Add more types as needed
     Default: ["The lair reacts unpredictably."],
   };
 
+  // Ensure the type exists; fallback to Default
   const selectedLairActions = lairActionsMap[type] || lairActionsMap.Default;
-  return [selectedLairActions[Math.floor(Math.random() * selectedLairActions.length)]]; // Randomize action
+
+  // Randomize and return one lair action
+  return [selectedLairActions[Math.floor(Math.random() * selectedLairActions.length)]];
 }
 
 export default function generateMonster(req, res) {

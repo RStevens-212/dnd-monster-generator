@@ -29,7 +29,7 @@ const monsterTypes = [
     'Undead',
 ];
 
-const sizes = ['Any', 'Small', 'Medium', 'Large'];
+const sizes = ['Any', 'Small', 'Medium', 'Large', 'Huge', 'Gargantuan'];
 
 const resistancesOptions = [
     'Fire',
@@ -45,7 +45,11 @@ const resistancesOptions = [
 const vulnerabilitiesOptions = [
     'Fire',
     'Cold',
+    'Acid',
     'Lightning',
+    'Poison',
+    'Psychic',
+    'Radiant',
     'Necrotic',
 ];
 
