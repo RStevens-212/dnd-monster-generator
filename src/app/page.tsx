@@ -14,6 +14,7 @@ export default function Home() {
     hasLairActions?: boolean;
     resistances?: string[];
     vulnerabilities?: string[];
+    actions?: string[];
   }) => {
   
     // Ensure defaults are applied
@@ -24,6 +25,7 @@ export default function Home() {
     const hasLairActions = formData.hasLairActions || false;
     const resistances = formData.resistances || undefined;
     const vulnerabilities = formData.vulnerabilities || undefined;
+    const actions = formData.actions || undefined
   
     // Send data to the backend
     const response = await fetch('/api/generateMonster', {
@@ -37,6 +39,7 @@ export default function Home() {
         hasLairActions,
         resistances, 
         vulnerabilities,
+        actions
       }),
     });
   

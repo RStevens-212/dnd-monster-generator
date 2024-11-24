@@ -29,7 +29,7 @@ const monsterTypes = [
     'Undead',
 ];
 
-const sizes = ['Any', 'Small', 'Medium', 'Large', 'Huge', 'Gargantuan'];
+const sizes = ['Tiny', 'Small', 'Medium', 'Large', 'Huge', 'Gargantuan'];
 
 const resistancesOptions = [
     'Fire',
@@ -63,6 +63,7 @@ export interface MonsterFormProps {
         hasLairActions: boolean;
         resistances?: string[];
         vulnerabilities?: string[];
+        actions?: string[];
     }) => void;
 }
 
@@ -74,6 +75,7 @@ const MonsterForm: React.FC<MonsterFormProps> = ({ onSubmit }) => {
     const [maxCR, setMaxCR] = useState(30);
     const [selectedResistances, setSelectedResistances] = useState<string[]>([]);
     const [selectedVulnerabilities, setSelectedVulnerabilities] = useState<string[]>([]);
+    const actions: string[] = []; 
 
     const handleMinCRChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setMinCR(event.target.value ? parseFloat(event.target.value) : 0.25);
@@ -102,6 +104,7 @@ const MonsterForm: React.FC<MonsterFormProps> = ({ onSubmit }) => {
             hasLairActions: hasLairActions || false,
             resistances: selectedResistances.length > 0 ? selectedResistances : undefined,
             vulnerabilities: selectedVulnerabilities.length > 0 ? selectedVulnerabilities : undefined,
+            actions
         };
 
         // Send processed data to the parent component

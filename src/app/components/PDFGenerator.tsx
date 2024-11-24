@@ -17,7 +17,8 @@ export const PDFGenerator = ({ monster }) => {
     doc.text(`Resistances: ${monster.resistances && monster.resistances.length > 0 ? monster.resistances : 'None'}`, 10, 110);
     doc.text(`Vulnerabilities: ${monster.vulnerabilities && monster.vulnerabilities.length > 0 ? monster.vulnerabilities : 'None'}`, 10, 120);
     doc.text(`Legendary Resistances: ${monster.legendaryResistances | 0}`, 10, 130);
-    doc.text(`Lair Actions: ${monster.lairActions.length > 0 ? monster.lairActions : 'None'}`, 10, 140);
+    doc.text(`Actions: ${monster.actions}`, 10, 140);
+    doc.text(`Lair Actions: ${monster.lairActions.length > 0 ? monster.lairActions : 'None'}`, 10, 180);
     // Add more details...
     doc.save(`${monster.name}.pdf`);
   };

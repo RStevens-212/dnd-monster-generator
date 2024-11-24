@@ -59,11 +59,11 @@ function generateLairActions(): string[] {
     "The lair trembles, causing unstable structures to collapse.",
     "Volcanic vents spew lava, dealing fire damage.",
     "A sudden burst of wind knocks creatures prone.",
-    "The lair fills with ghostly whispers, imposing disadvantage on Wisdom saving throws.",
+    "The lair fills with ghostly whispers; all characters must succeed on a Wisdom save (DC 15) or become Frightened for 2 turns.",
     "Shadows shift and attack, dealing necrotic damage.",
     "Bones animate and attempt to grapple intruders.",
     "Illusory flowers bloom, creating difficult terrain.",
-    "Fey magic confuses enemies, forcing them to attack allies.",
+    "Chaotic magic confuses enemies, forcing them to attack allies.",
     "Pools of infernal fire erupt, dealing fire damage.",
     "Demonic laughter echoes, causing fear in non-fiends.",
     "The lair's mechanical defenses activate, firing bolts or darts.",
@@ -93,6 +93,7 @@ export default function generateMonster(req) {
   const resistances: string[] = formData.resistances;
   const vulnerabilities: string[] = formData.vulnerabilities;
   const lairActions = formData.hasLairActions ? generateLairActions() : [];
+  const actions: string[] = formData.actions
 
   const monster = {
     name,
@@ -103,6 +104,7 @@ export default function generateMonster(req) {
     resistances,
     vulnerabilities,
     lairActions,
+    actions
   };
 
   return monster;
