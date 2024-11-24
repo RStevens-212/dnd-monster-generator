@@ -1,4 +1,5 @@
 function generateName(type: string): string {
+  console.log('type', type)
   const typeToNameMap = {
     Aberration: "Gloomcreep",
     Beast: "Fangtail",
@@ -24,14 +25,23 @@ function calculateBaseStats(cr: number): {
   strength: number;
   dexterity: number;
   constitution: number;
+  intelligence: number;
+  wisdom: number;
+  charisma: number;
 } {
   const baseValue = Math.min(Math.max(Math.floor(cr * 3), 1), 20); // Scale with CR
+  const randomModifier = () => Math.floor(Math.random() * 5) - 2; // Random modifier between -2 and +2
+
   return {
-    strength: baseValue + Math.floor(Math.random() * 5) - 2,
-    dexterity: baseValue + Math.floor(Math.random() * 5) - 2,
-    constitution: baseValue + Math.floor(Math.random() * 5) - 2,
+    strength: baseValue + randomModifier(),
+    dexterity: baseValue + randomModifier(),
+    constitution: baseValue + randomModifier(),
+    intelligence: baseValue + randomModifier(),
+    wisdom: baseValue + randomModifier(),
+    charisma: baseValue + randomModifier(),
   };
 }
+
 
 function generateLairActions(type: string): string[] {
   const lairActionsMap: Record<string, string[]> = {
@@ -68,13 +78,10 @@ function generateLairActions(type: string): string[] {
   return [selectedLairActions[Math.floor(Math.random() * selectedLairActions.length)]];
 }
 
-export default function generateMonster(req, res) {
-  const formData = req.body;
+export default function generateMonster(req) {
+  const formData = req;
 
-  const type =
-    formData.types && formData.types.length > 0
-      ? formData.types[Math.floor(Math.random() * formData.types.length)]
-      : "Unknown";
+  const type = formData.type;
 
   const name = generateName(type); // Use the function to generate the name
   const size = formData.size || "Unknown";
@@ -101,5 +108,5 @@ export default function generateMonster(req, res) {
     lairActions,
   };
 
-  res.status(200).json(monster);
+  return monster;
 }

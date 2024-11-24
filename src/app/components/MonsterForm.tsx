@@ -12,7 +12,6 @@ import {
 } from '@mui/material';
 
 const monsterTypes = [
-    'Any',
     'Aberration',
     'Beast',
     'Celestial',
@@ -56,7 +55,7 @@ const vulnerabilitiesOptions = [
 // Type for the props
 export interface MonsterFormProps {
     onSubmit: (data: {
-        types: string[];
+        type: string;
         size: string;
         minCR: number;
         maxCR: number;
@@ -68,8 +67,8 @@ export interface MonsterFormProps {
 
 const MonsterForm: React.FC<MonsterFormProps> = ({ onSubmit }) => {
     const [hasLairActions, setHasLairActions] = useState(false);
-    const [selectedTypes, setSelectedTypes] = useState<string[]>(['Any']);
-    const [selectedSize, setSelectedSize] = useState<string>('Any');
+    const [selectedType, setSelectedType] = useState<string>('Aberration');
+    const [selectedSize, setSelectedSize] = useState<string>('Small');
     const [minCR, setMinCR] = useState(0.25);
     const [maxCR, setMaxCR] = useState(30);
     const [selectedResistances, setSelectedResistances] = useState<string[]>([]);
@@ -83,8 +82,8 @@ const MonsterForm: React.FC<MonsterFormProps> = ({ onSubmit }) => {
         setMaxCR(event.target.value ? parseFloat(event.target.value) : 30);
     };
 
-    const handleTypeChange = (event: SelectChangeEvent<string[]>) => {
-        setSelectedTypes(event.target.value as string[]);
+    const handleTypeChange = (event: SelectChangeEvent<string>) => {
+        setSelectedType(event.target.value);
     };
 
     const handleSizeChange = (event: SelectChangeEvent<string>) => {
@@ -95,8 +94,8 @@ const MonsterForm: React.FC<MonsterFormProps> = ({ onSubmit }) => {
         event.preventDefault();
 
         const formData = {
-            types: selectedTypes.includes('Any') ? undefined : selectedTypes,
-            size: selectedSize === 'Any' ? undefined : selectedSize,
+            type: selectedType,
+            size: selectedSize,
             minCR: minCR || 0.25,
             maxCR: maxCR || 30,
             hasLairActions: hasLairActions || false,
@@ -111,13 +110,12 @@ const MonsterForm: React.FC<MonsterFormProps> = ({ onSubmit }) => {
     return (
         <form onSubmit={(e) => handleFormSubmit(e)}>
             <Select
-                name="type"
-                multiple
+                name='type'
                 fullWidth
-                value={selectedTypes}
+                label='Type'
+                value={selectedType}
                 onChange={handleTypeChange}
                 input={<OutlinedInput />}
-                renderValue={(selected) => selected.join(', ')}
                 style={{ marginBottom: '20px' }}
             >
                 {monsterTypes.map((type) => (
@@ -128,9 +126,9 @@ const MonsterForm: React.FC<MonsterFormProps> = ({ onSubmit }) => {
             </Select>
 
             <TextField
-                label="Minimum Challenge Rating"
-                type="number"
-                name="minCR"
+                label='Minimum Challenge Rating'
+                type='number'
+                name='minCR'
                 fullWidth
                 value={minCR}
                 onChange={handleMinCRChange}
@@ -140,9 +138,9 @@ const MonsterForm: React.FC<MonsterFormProps> = ({ onSubmit }) => {
             />
 
             <TextField
-                label="Maximum Challenge Rating"
-                type="number"
-                name="maxCR"
+                label='Maximum Challenge Rating'
+                type='number'
+                name='maxCR'
                 fullWidth
                 value={maxCR}
                 onChange={handleMaxCRChange}
@@ -152,7 +150,8 @@ const MonsterForm: React.FC<MonsterFormProps> = ({ onSubmit }) => {
             />
 
             <Select
-                name="size"
+                name='size'
+                label='size'
                 fullWidth
                 value={selectedSize}
                 onChange={handleSizeChange}
@@ -171,7 +170,7 @@ const MonsterForm: React.FC<MonsterFormProps> = ({ onSubmit }) => {
                 value={selectedResistances}
                 onChange={(event, newValue) => setSelectedResistances(newValue)}
                 renderInput={(params) => (
-                    <TextField {...params} label="Resistances" placeholder="Choose resistances" />
+                    <TextField {...params} label='Resistances' placeholder='Choose resistances' />
                 )}
                 style={{ marginBottom: '20px' }}
             />
@@ -182,7 +181,7 @@ const MonsterForm: React.FC<MonsterFormProps> = ({ onSubmit }) => {
                 value={selectedVulnerabilities}
                 onChange={(event, newValue) => setSelectedVulnerabilities(newValue)}
                 renderInput={(params) => (
-                    <TextField {...params} label="Vulnerabilities" placeholder="Choose vulnerabilities" />
+                    <TextField {...params} label='Vulnerabilities' placeholder='Choose vulnerabilities' />
                 )}
                 style={{ marginBottom: '20px' }}
             />
@@ -190,15 +189,15 @@ const MonsterForm: React.FC<MonsterFormProps> = ({ onSubmit }) => {
             <FormControlLabel
                 control={
                     <Checkbox
-                        name="hasLairActions"
+                        name='hasLairActions'
                         checked={hasLairActions}
                         onChange={(event) => setHasLairActions(event.target.checked)}
                     />
                 }
-                label="Lair Actions"
+                label='Lair Actions'
             />
 
-            <Button type="submit" variant="contained" style={{ marginTop: '20px' }}>
+            <Button type='submit' variant='contained' style={{ marginTop: '20px' }}>
                 Generate Monster
             </Button>
         </form>

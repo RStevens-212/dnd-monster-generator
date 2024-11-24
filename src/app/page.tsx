@@ -8,7 +8,7 @@ export default function Home() {
   const [monster, setMonster] = useState(null);
 
   const handleSubmit = async (formData: {
-    types?: string[];
+    type: string;
     size?: string;
     minCR: number;
     maxCR: number;
@@ -16,12 +16,11 @@ export default function Home() {
     selectedResistances?: string[];
     vulnerabilities?: string[];
   }) => {
-    console.log('Form Data:', formData);
   
     // Ensure defaults are applied
     const minCR = formData.minCR || 0.25;
     const maxCR = formData.maxCR || 30;
-    const selectedTypes = formData.types || ['Any'];
+    const selectedType = formData.type || 'Any';
     const selectedSize = formData.size || 'Any';
     const hasLairActions = formData.hasLairActions || false;
     const selectedResistances = formData.selectedResistances || undefined;
@@ -32,7 +31,7 @@ export default function Home() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        types: selectedTypes,
+        type: selectedType,
         size: selectedSize,
         minCR,
         maxCR,
