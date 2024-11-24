@@ -1,24 +1,36 @@
 function generateName(type: string): string {
-  console.log('type', type)
-  const typeToNameMap = {
-    Aberration: "Gloomcreep",
-    Beast: "Fangtail",
-    Celestial: "Radiantwing",
-    Construct: "Ironclad",
-    Dragon: "Flameclaw",
-    Elemental: "Stormshade",
-    Fey: "Moonsprite",
-    Fiend: "Hellmaw",
-    Giant: "Stonebreaker",
-    Humanoid: "Shadeborn",
-    Monstrosity: "Riftcrawler",
-    Ooze: "Sludgegrim",
-    Plant: "Thornbriar",
-    Undead: "Gravewight",
+  const typeToNameMap: Record<string, string[]> = {
+    Aberration: ["Gloomcreep", "Mindshatter", "Voidspawn"],
+    Beast: ["Fangtail", "Clawmaw", "Prowling Shadow"],
+    Celestial: ["Radiantwing", "Skyflame", "Lightbringer"],
+    Construct: ["Ironclad", "Steel Sentinel", "Gearcrusher"],
+    Dragon: ["Flameclaw", "Stormfang", "Shadowwing"],
+    Elemental: ["Stormshade", "Infernal Spark", "Earthshard"],
+    Fey: ["Moonsprite", "Starweaver", "Whisperbloom"],
+    Fiend: ["Hellmaw", "Doomcaller", "Ashfang"],
+    Giant: ["Stonebreaker", "Earthheaver", "Frostfang"],
+    Humanoid: ["Shadeborn", "Bladewalker", "Duskscourge"],
+    Monstrosity: ["Riftcrawler", "Nightstalker", "Abyssfang"],
+    Ooze: ["Sludgegrim", "Blightmass", "Gelatinous Wraith"],
+    Plant: ["Thornbriar", "Barkwrath", "Vinewraith"],
+    Undead: ["Gravewight", "Bonehollow", "Ghastcaller"],
   };
 
-  // If the type exists in the map, return the mapped name; otherwise, use a generic fallback
-  return typeToNameMap[type] || `Mysterious ${type}`;
+  // Pick a random name from the list for the given type
+  const names = typeToNameMap[type] || [`Mysterious ${type}`];
+  return names[Math.floor(Math.random() * names.length)];
+}
+
+function getValidCR(minCR: number, maxCR: number): number {
+  const validCRs = [
+    0, 1 / 8, 1 / 4, 1 / 2, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
+  ];
+
+  // Filter valid CRs within the specified range
+  const filteredCRs = validCRs.filter((cr) => cr >= minCR && cr <= maxCR);
+
+  // Randomly select one of the valid CRs
+  return filteredCRs[Math.floor(Math.random() * filteredCRs.length)];
 }
 
 function calculateBaseStats(cr: number): {
@@ -42,40 +54,26 @@ function calculateBaseStats(cr: number): {
   };
 }
 
+function generateLairActions(): string[] {
+  const universalLairActions = [
+    "The lair trembles, causing unstable structures to collapse.",
+    "Volcanic vents spew lava, dealing fire damage.",
+    "A sudden burst of wind knocks creatures prone.",
+    "The lair fills with ghostly whispers, imposing disadvantage on Wisdom saving throws.",
+    "Shadows shift and attack, dealing necrotic damage.",
+    "Bones animate and attempt to grapple intruders.",
+    "Illusory flowers bloom, creating difficult terrain.",
+    "Fey magic confuses enemies, forcing them to attack allies.",
+    "Pools of infernal fire erupt, dealing fire damage.",
+    "Demonic laughter echoes, causing fear in non-fiends.",
+    "The lair's mechanical defenses activate, firing bolts or darts.",
+    "Gears grind loudly, imposing disadvantage on Perception checks.",
+  ];
 
-function generateLairActions(type: string): string[] {
-  const lairActionsMap: Record<string, string[]> = {
-    Dragon: [
-      "The lair trembles, causing unstable structures to collapse.",
-      "Volcanic vents spew lava, dealing fire damage.",
-      "A sudden burst of wind knocks creatures prone.",
-    ],
-    Undead: [
-      "The lair fills with ghostly whispers, imposing disadvantage on Wisdom saving throws.",
-      "Shadows shift and attack, dealing necrotic damage.",
-      "Bones animate and attempt to grapple intruders.",
-    ],
-    Fey: [
-      "Illusory flowers bloom, creating difficult terrain.",
-      "Fey magic confuses enemies, forcing them to attack allies.",
-    ],
-    Fiend: [
-      "Pools of infernal fire erupt, dealing fire damage.",
-      "Demonic laughter echoes, causing fear in non-fiends.",
-    ],
-    Construct: [
-      "The lair's mechanical defenses activate, firing bolts or darts.",
-      "Gears grind loudly, imposing disadvantage on Perception checks.",
-    ],
-    // Add more types as needed
-    Default: ["The lair reacts unpredictably."],
-  };
-
-  // Ensure the type exists; fallback to Default
-  const selectedLairActions = lairActionsMap[type] || lairActionsMap.Default;
-
-  // Randomize and return one lair action
-  return [selectedLairActions[Math.floor(Math.random() * selectedLairActions.length)]];
+  // Randomly pick 1 to 3 actions from the list
+  const numberOfActions = Math.floor(Math.random() * 3) + 1; // Between 1 and 3
+  const shuffledActions = universalLairActions.sort(() => 0.5 - Math.random());
+  return shuffledActions.slice(0, numberOfActions);
 }
 
 export default function generateMonster(req) {
@@ -85,17 +83,16 @@ export default function generateMonster(req) {
 
   const name = generateName(type); // Use the function to generate the name
   const size = formData.size || "Unknown";
-  const cr = formData.minCR && formData.maxCR
-    ? parseFloat(
-        (Math.random() * (formData.maxCR - formData.minCR) + formData.minCR).toFixed(2)
-      )
-    : 0;
+  const minCR = formData.minCR ?? 0;
+  const maxCR = formData.maxCR ?? 30;
+
+  const cr = getValidCR(minCR, maxCR); // Pick a valid CR
 
   const stats = calculateBaseStats(cr);
 
-  const resistances: string[] = [];
-  const vulnerabilities: string[] = [];
-  const lairActions = formData.hasLairActions ? generateLairActions(type) : [];
+  const resistances: string[] = formData.resistances;
+  const vulnerabilities: string[] = formData.vulnerabilities;
+  const lairActions = formData.hasLairActions ? generateLairActions() : [];
 
   const monster = {
     name,

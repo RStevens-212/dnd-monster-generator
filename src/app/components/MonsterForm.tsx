@@ -9,6 +9,7 @@ import {
     OutlinedInput,
     SelectChangeEvent,
     Autocomplete,
+    Paper
 } from '@mui/material';
 
 const monsterTypes = [
@@ -108,99 +109,101 @@ const MonsterForm: React.FC<MonsterFormProps> = ({ onSubmit }) => {
     };
 
     return (
-        <form onSubmit={(e) => handleFormSubmit(e)}>
-            <Select
-                name='type'
-                fullWidth
-                label='Type'
-                value={selectedType}
-                onChange={handleTypeChange}
-                input={<OutlinedInput />}
-                style={{ marginBottom: '20px' }}
-            >
-                {monsterTypes.map((type) => (
-                    <MenuItem key={type} value={type}>
-                        {type}
-                    </MenuItem>
-                ))}
-            </Select>
+        <Paper sx={{margin: '8px', padding: '8px'}}>
+            <form onSubmit={(e) => handleFormSubmit(e)}>
+                <Select
+                    name='type'
+                    fullWidth
+                    label='Type'
+                    value={selectedType}
+                    onChange={handleTypeChange}
+                    input={<OutlinedInput />}
+                    style={{ marginBottom: '20px' }}
+                >
+                    {monsterTypes.map((type) => (
+                        <MenuItem key={type} value={type}>
+                            {type}
+                        </MenuItem>
+                    ))}
+                </Select>
 
-            <TextField
-                label='Minimum Challenge Rating'
-                type='number'
-                name='minCR'
-                fullWidth
-                value={minCR}
-                onChange={handleMinCRChange}
-                required
-                inputProps={{ min: 0.25, max: 30, step: 0.25 }}
-                style={{ marginBottom: '20px' }}
-            />
+                <TextField
+                    label='Minimum Challenge Rating'
+                    type='number'
+                    name='minCR'
+                    fullWidth
+                    value={minCR}
+                    onChange={handleMinCRChange}
+                    required
+                    inputProps={{ min: 0.25, max: 30, step: 0.25 }}
+                    style={{ marginBottom: '20px' }}
+                />
 
-            <TextField
-                label='Maximum Challenge Rating'
-                type='number'
-                name='maxCR'
-                fullWidth
-                value={maxCR}
-                onChange={handleMaxCRChange}
-                required
-                inputProps={{ min: 0.25, max: 30, step: 0.25 }}
-                style={{ marginBottom: '20px' }}
-            />
+                <TextField
+                    label='Maximum Challenge Rating'
+                    type='number'
+                    name='maxCR'
+                    fullWidth
+                    value={maxCR}
+                    onChange={handleMaxCRChange}
+                    required
+                    inputProps={{ min: 0.25, max: 30, step: 0.25 }}
+                    style={{ marginBottom: '20px' }}
+                />
 
-            <Select
-                name='size'
-                label='size'
-                fullWidth
-                value={selectedSize}
-                onChange={handleSizeChange}
-                style={{ marginBottom: '20px' }}
-            >
-                {sizes.map((size) => (
-                    <MenuItem key={size} value={size}>
-                        {size}
-                    </MenuItem>
-                ))}
-            </Select>
+                <Select
+                    name='size'
+                    label='size'
+                    fullWidth
+                    value={selectedSize}
+                    onChange={handleSizeChange}
+                    style={{ marginBottom: '20px' }}
+                >
+                    {sizes.map((size) => (
+                        <MenuItem key={size} value={size}>
+                            {size}
+                        </MenuItem>
+                    ))}
+                </Select>
 
-            <Autocomplete
-                multiple
-                options={resistancesOptions}
-                value={selectedResistances}
-                onChange={(event, newValue) => setSelectedResistances(newValue)}
-                renderInput={(params) => (
-                    <TextField {...params} label='Resistances' placeholder='Choose resistances' />
-                )}
-                style={{ marginBottom: '20px' }}
-            />
+                <Autocomplete
+                    multiple
+                    options={resistancesOptions}
+                    value={selectedResistances}
+                    onChange={(event, newValue) => setSelectedResistances(newValue)}
+                    renderInput={(params) => (
+                        <TextField {...params} label='Resistances' placeholder='Choose resistances' />
+                    )}
+                    style={{ marginBottom: '20px' }}
+                />
 
-            <Autocomplete
-                multiple
-                options={vulnerabilitiesOptions}
-                value={selectedVulnerabilities}
-                onChange={(event, newValue) => setSelectedVulnerabilities(newValue)}
-                renderInput={(params) => (
-                    <TextField {...params} label='Vulnerabilities' placeholder='Choose vulnerabilities' />
-                )}
-                style={{ marginBottom: '20px' }}
-            />
+                <Autocomplete
+                    multiple
+                    options={vulnerabilitiesOptions}
+                    value={selectedVulnerabilities}
+                    onChange={(event, newValue) => setSelectedVulnerabilities(newValue)}
+                    renderInput={(params) => (
+                        <TextField {...params} label='Vulnerabilities' placeholder='Choose vulnerabilities' />
+                    )}
+                    style={{ marginBottom: '20px' }}
+                />
 
-            <FormControlLabel
-                control={
-                    <Checkbox
-                        name='hasLairActions'
-                        checked={hasLairActions}
-                        onChange={(event) => setHasLairActions(event.target.checked)}
-                    />
-                }
-                label='Lair Actions'
-            />
+                <FormControlLabel
+                    control={
+                        <Checkbox
+                            name='hasLairActions'
+                            checked={hasLairActions}
+                            onChange={(event) => setHasLairActions(event.target.checked)}
+                        />
+                    }
+                    label='Lair Actions'
+                />
 
-            <Button type='submit' variant='contained' style={{ marginTop: '20px' }}>
-                Generate Monster
-            </Button>
-        </form>
+                <Button type='submit' variant='contained' style={{ marginTop: '20px' }}>
+                    Generate Monster
+                </Button>
+            </form>
+        </Paper>
     );
 };
 

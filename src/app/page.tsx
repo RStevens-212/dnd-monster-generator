@@ -1,7 +1,6 @@
 'use client'
 import MonsterForm from './components/MonsterForm';
 import { MonsterCard } from './components/MonsterCard';
-import { PDFGenerator } from './components/PDFGenerator';
 import { useState } from 'react';
 
 export default function Home() {
@@ -13,7 +12,7 @@ export default function Home() {
     minCR: number;
     maxCR: number;
     hasLairActions?: boolean;
-    selectedResistances?: string[];
+    resistances?: string[];
     vulnerabilities?: string[];
   }) => {
   
@@ -23,7 +22,7 @@ export default function Home() {
     const selectedType = formData.type || 'Any';
     const selectedSize = formData.size || 'Any';
     const hasLairActions = formData.hasLairActions || false;
-    const selectedResistances = formData.selectedResistances || undefined;
+    const resistances = formData.resistances || undefined;
     const vulnerabilities = formData.vulnerabilities || undefined;
   
     // Send data to the backend
@@ -36,16 +35,14 @@ export default function Home() {
         minCR,
         maxCR,
         hasLairActions,
-        resistances: selectedResistances, 
-        vulnerabilities: vulnerabilities,
+        resistances, 
+        vulnerabilities,
       }),
     });
-    console.log(response);
   
     // Handle response
     if (response.ok) {
       const generatedMonster = await response.json();
-      console.log('Generated Monster:', generatedMonster);
       setMonster(generatedMonster); // Update state with the generated monster
     } else {
       console.error('Error generating monster:', response.statusText);
@@ -67,7 +64,6 @@ export default function Home() {
       {monster && (
         <>
           <MonsterCard monster={monster} />
-          <PDFGenerator monster={monster} />
         </>
       )}
     </main>
