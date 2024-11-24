@@ -32,7 +32,6 @@ type MonsterProps = {
 };
 
 export const MonsterCard: React.FC<MonsterProps> = ({ monster }) => {
-  if (!monster) return null;
 
   const [editableMonster, setEditableMonster] = useState(monster);
 
